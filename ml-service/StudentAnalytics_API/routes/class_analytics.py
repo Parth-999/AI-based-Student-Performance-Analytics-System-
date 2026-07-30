@@ -18,4 +18,8 @@ def class_analytics():
 
     result = generate_class_analytics(data)
 
-    return jsonify(result), 200
+    return jsonify({
+        "success": True,
+        "message": "Class analytics generated successfully.",
+        "data": result
+    }), 200

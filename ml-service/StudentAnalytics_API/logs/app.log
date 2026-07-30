@@ -77,3 +77,18 @@ werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on 
 2026-07-30 12:58:24,608 - WARNING -  * Debugger is active!
 2026-07-30 12:58:24,610 - INFO -  * Debugger PIN: 110-984-511
 2026-07-30 12:58:35,303 - INFO - 127.0.0.1 - - [30/Jul/2026 12:58:35] "POST /api/v1/predict HTTP/1.1" 200 -
+2026-07-30 13:03:37,931 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-30 13:03:37,931 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-30 13:03:37,932 - INFO -  * Restarting with stat
+2026-07-30 13:03:39,386 - WARNING -  * Debugger is active!
+2026-07-30 13:03:39,388 - INFO -  * Debugger PIN: 110-984-511
+2026-07-30 13:05:18,533 - INFO - 127.0.0.1 - - [30/Jul/2026 13:05:18] "[31m[1mPOST /api/v1/class-analytics HTTP/1.1[0m" 400 -
+2026-07-30 13:06:09,008 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-30 13:06:09,008 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-30 13:06:09,009 - INFO -  * Restarting with stat
+2026-07-30 13:06:10,523 - WARNING -  * Debugger is active!
+2026-07-30 13:06:10,525 - INFO -  * Debugger PIN: 110-984-511
+2026-07-30 13:06:13,630 - INFO - 127.0.0.1 - - [30/Jul/2026 13:06:13] "[31m[1mPOST /api/v1/class-analytics HTTP/1.1[0m" 400 -
+2026-07-30 13:06:48,680 - INFO - 127.0.0.1 - - [30/Jul/2026 13:06:48] "POST /api/v1/class-analytics HTTP/1.1" 200 -

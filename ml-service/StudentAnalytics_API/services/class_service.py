@@ -48,44 +48,40 @@ def generate_class_analytics(data):
     attendance_chart = [s["attendance"] for s in students]
 
     return {
-        "success": True,
-        "message": "Class analytics generated successfully.",
-        "data": {
 
-            "summary": {
+    "summary": {
 
-                "totalStudents": total_students,
+        "totalStudents": total_students,
 
-                "classAverage": class_average,
+        "classAverage": class_average,
 
-                "averageAttendance": average_attendance,
+        "averageAttendance": average_attendance,
 
-                "passPercentage": pass_percentage,
+        "passPercentage": pass_percentage,
 
-                "studentsAtRisk": len(risk_students)
-            },
+        "studentsAtRisk": len(risk_students)
+    },
 
-            "topPerformer": highest_student,
+    "topPerformer": highest_student,
 
-            "lowestPerformer": lowest_student,
+    "lowestPerformer": lowest_student,
 
-            "riskStudents": risk_students,
+    "riskStudents": risk_students,
 
-            "charts": {
+    "charts": {
 
-                "marks": {
+        "marks": {
 
-                    "labels": chart_labels,
+            "labels": chart_labels,
 
-                    "values": marks_chart
-                },
+            "values": marks_chart
+        },
 
-                "attendance": {
+        "attendance": {
 
-                    "labels": chart_labels,
+            "labels": chart_labels,
 
-                    "values": attendance_chart
-                }
-            }
+            "values": attendance_chart
         }
     }
+}
