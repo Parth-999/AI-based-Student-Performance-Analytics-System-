@@ -1,0 +1,79 @@
+2026-07-29 18:23:46,530 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-29 18:23:46,530 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-29 18:23:46,531 - INFO -  * Restarting with stat
+2026-07-29 18:23:46,763 - WARNING -  * Debugger is active!
+2026-07-29 18:23:46,765 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:24:09,895 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-29 18:24:09,895 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-29 18:24:09,896 - INFO -  * Restarting with stat
+2026-07-29 18:24:10,145 - WARNING -  * Debugger is active!
+2026-07-29 18:24:10,151 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:24:24,145 - ERROR - division by zero
+Traceback (most recent call last):
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\app.py", line 27, in error
+    return 10 / 0
+           ~~~^~~
+ZeroDivisionError: division by zero
+2026-07-29 18:24:24,150 - INFO - 127.0.0.1 - - [29/Jul/2026 18:24:24] "[35m[1mGET /error HTTP/1.1[0m" 500 -
+2026-07-29 18:24:24,197 - ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Project_CDAC\AI-based-Student-Performance-Analytics-System-\ml-service\StudentAnalytics_API\venv\Lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2026-07-29 18:24:24,214 - INFO - 127.0.0.1 - - [29/Jul/2026 18:24:24] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2026-07-29 18:42:56,921 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-29 18:42:56,921 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-29 18:42:56,922 - INFO -  * Restarting with stat
+2026-07-29 18:42:57,171 - WARNING -  * Debugger is active!
+2026-07-29 18:42:57,173 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:43:18,933 - INFO - 127.0.0.1 - - [29/Jul/2026 18:43:18] "POST /api/v1/student-insights HTTP/1.1" 200 -
+2026-07-29 18:49:02,535 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-29 18:49:02,535 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-29 18:49:02,536 - INFO -  * Restarting with stat
+2026-07-29 18:49:02,770 - WARNING -  * Debugger is active!
+2026-07-29 18:49:02,772 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:49:25,918 - INFO - 127.0.0.1 - - [29/Jul/2026 18:49:25] "POST /api/v1/class-analytics HTTP/1.1" 200 -
+2026-07-29 18:54:36,903 - INFO -  * Detected change in 'C:\\Project_CDAC\\AI-based-Student-Performance-Analytics-System-\\ml-service\\StudentAnalytics_API\\services\\class_service.py', reloading
+2026-07-29 18:54:36,929 - INFO -  * Restarting with stat
+2026-07-29 18:54:37,193 - WARNING -  * Debugger is active!
+2026-07-29 18:54:37,195 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:54:46,381 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-29 18:54:46,381 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-29 18:54:46,382 - INFO -  * Restarting with stat
+2026-07-29 18:54:46,616 - WARNING -  * Debugger is active!
+2026-07-29 18:54:46,618 - INFO -  * Debugger PIN: 504-963-424
+2026-07-29 18:54:50,298 - INFO - 127.0.0.1 - - [29/Jul/2026 18:54:50] "POST /api/v1/class-analytics HTTP/1.1" 200 -
+2026-07-30 12:24:01,131 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-30 12:24:01,131 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-30 12:24:01,133 - INFO -  * Restarting with stat
+2026-07-30 12:24:02,642 - WARNING -  * Debugger is active!
+2026-07-30 12:24:02,644 - INFO -  * Debugger PIN: 110-984-511
+2026-07-30 12:24:42,391 - INFO - 127.0.0.1 - - [30/Jul/2026 12:24:42] "POST /api/v1/predict HTTP/1.1" 200 -
+2026-07-30 12:58:23,180 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-30 12:58:23,180 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-30 12:58:23,181 - INFO -  * Restarting with stat
+2026-07-30 12:58:24,608 - WARNING -  * Debugger is active!
+2026-07-30 12:58:24,610 - INFO -  * Debugger PIN: 110-984-511
+2026-07-30 12:58:35,303 - INFO - 127.0.0.1 - - [30/Jul/2026 12:58:35] "POST /api/v1/predict HTTP/1.1" 200 -
