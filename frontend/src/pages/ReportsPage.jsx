@@ -82,6 +82,60 @@ const loadReports = async () => {
     );
 }
 
+const downloadExcel = async () => {
+    try {
+
+        addToast(
+            "Export Started",
+            "Preparing Excel report...",
+            "info"
+        );
+
+        const response = await api.get(
+            "/Reports/export/excel",
+            {
+                responseType: "blob"
+            }
+        );
+
+        const blob = new Blob([
+            response.data
+        ]);
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+
+        link.download = "StudentPerformanceReport.xlsx";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        window.URL.revokeObjectURL(url);
+
+        addToast(
+            "Success",
+            "Excel report downloaded successfully.",
+            "success"
+        );
+    }
+    catch (err)
+    {
+        console.error(err);
+
+        addToast(
+            "Export Failed",
+            "Unable to generate Excel report.",
+            "error"
+        );
+    }
+};
+
   return (
     <div className="space-y-6">
       {/* Top Header */}
@@ -204,12 +258,10 @@ const loadReports = async () => {
               <Eye className="w-4 h-4" /> Live Document Preview
             </button>
             <button
-              onClick={() => {
-                addToast('Generating Excel', 'Downloading spreadsheet report...', 'info');
-              }}
-              className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"
+                onClick={downloadExcel}
+                className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"
             >
-              <Download className="w-4 h-4" /> Export Excel
+                <Download className="w-4 h-4" /> Export Excel
             </button>
             <button
               onClick={() => window.print()}

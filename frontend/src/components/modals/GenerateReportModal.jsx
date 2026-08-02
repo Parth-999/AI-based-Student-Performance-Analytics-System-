@@ -4,6 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { FileText, Download, Printer, Eye, CheckCircle2 } from 'lucide-react';
 import { DEPARTMENTS, SEMESTERS } from '../../mockData/studentData';
+import api from "../../services/api";
 
 export const GenerateReportModal = () => {
   const { activeModal, setActiveModal, students } = useApp();
@@ -22,13 +23,58 @@ export const GenerateReportModal = () => {
     }, 1000);
   };
 
-  const handleExportExcel = () => {
-    addToast('Generating Excel', `Exporting tabular dataset to ${reportType}_Summary.xlsx`, 'info');
-    setTimeout(() => {
-      addToast('Download Complete', `${reportType}_Summary.xlsx downloaded!`, 'success');
-      setActiveModal(null);
-    }, 1000);
-  };
+  const handleExportExcel = async () => {
+    try {
+
+        addToast(
+            "Generating Excel",
+            "Preparing Excel report...",
+            "info"
+        );
+
+        const response = await api.get(
+            "/Reports/export/excel",
+            {
+                responseType: "blob"
+            }
+        );
+
+        const blob = new Blob([response.data]);
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "StudentPerformanceReport.xlsx";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        window.URL.revokeObjectURL(url);
+
+        addToast(
+            "Download Complete",
+            "Excel report downloaded successfully.",
+            "success"
+        );
+
+        setActiveModal(null);
+
+    } catch (err) {
+
+        console.error(err);
+
+        addToast(
+            "Export Failed",
+            "Unable to generate Excel report.",
+            "error"
+        );
+    }
+};
 
   const handlePrint = () => {
     window.print();

@@ -201,10 +201,14 @@ public class PredictionsController : ControllerBase
 public class ReportsController : ControllerBase
 {
     private readonly IReportsService _reportsService;
+    private readonly IExcelReportService _excelReportService;
 
-    public ReportsController(IReportsService reportsService)
+    public ReportsController(
+         IReportsService reportsService,
+         IExcelReportService excelReportService)
     {
         _reportsService = reportsService;
+        _excelReportService = excelReportService;
     }
 
     [HttpGet("dashboard")]
@@ -212,6 +216,17 @@ public class ReportsController : ControllerBase
     {
         var result = await _reportsService.GetDashboardAsync();
         return Ok(result);
+    }
+
+    [HttpGet("export/excel")]
+    public async Task<IActionResult> ExportExcel()
+    {
+        var file = await _excelReportService.GeneratePerformanceReportAsync();
+
+        return File(
+            file,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            $"StudentPerformanceReport_{DateTime.Now:yyyyMMdd}.xlsx");
     }
 }
 

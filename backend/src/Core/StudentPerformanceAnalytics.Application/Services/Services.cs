@@ -58,6 +58,11 @@ public interface IReportsService
     Task<ReportsDashboardDto> GetDashboardAsync();
 }
 
+public interface IExcelReportService
+{
+    Task<byte[]> GeneratePerformanceReportAsync();
+}
+
 public interface ISettingsService
 {
     Task<SystemSettingDto> GetSettingsAsync();

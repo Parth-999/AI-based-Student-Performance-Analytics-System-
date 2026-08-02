@@ -55,6 +55,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Report Services
 builder.Services.AddScoped<IReportsService, ReportsService>();
+builder.Services.AddScoped<IExcelReportService, ExcelReportService>();
 
 // 4. HttpClient Integration for Flask ML API
 builder.Services.AddHttpClient<IFlaskMlApiClient, FlaskMlApiClient>(client =>
