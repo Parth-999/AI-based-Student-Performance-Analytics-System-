@@ -814,65 +814,61 @@ public class AttendanceService : IAttendanceService
             return true;
         }
 
-        public class SettingsService : ISettingsService
+    public class SettingsService : ISettingsService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public SettingsService(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
-
-            public SettingsService(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
-
-            public async Task<SystemSettingDto> GetSettingsAsync()
-            {
-                var setting = (await _unitOfWork.Settings.GetAllAsync())
-                    .FirstOrDefault();
-
-                if (setting == null)
-                {
-                    return new SystemSettingDto(
-                        "",
-                        "",
-                        "",
-                        75,
-                        ""
-                    );
-                }
-
-                return new SystemSettingDto(
-                    setting.InstituteName,
-                    setting.AccreditationGrade,
-                    setting.AcademicYear,
-                    setting.LowAttendanceThreshold,
-                    setting.FlaskApiEndpoint
-                );
-            }
-
-            public async Task<bool> UpdateSettingsAsync(SystemSettingDto dto)
-            {
-                var setting = (await _unitOfWork.Settings.GetAllAsync())
-                    .FirstOrDefault();
-
-                if (setting == null)
-                {
-                    setting = new SystemSetting();
-
-                    await _unitOfWork.Settings.AddAsync(setting);
-                }
-
-                setting.InstituteName = dto.InstituteName;
-                setting.AccreditationGrade = dto.AccreditationGrade;
-                setting.AcademicYear = dto.AcademicYear;
-                setting.LowAttendanceThreshold = dto.LowAttendanceThreshold;
-                setting.FlaskApiEndpoint = dto.FlaskApiEndpoint;
-
-                _unitOfWork.Settings.Update(setting);
-
-                await _unitOfWork.CompleteAsync();
-
-                return true;
-            }
+            _unitOfWork = unitOfWork;
         }
 
+        public async Task<SystemSettingDto> GetSettingsAsync()
+        {
+            var setting = (await _unitOfWork.Settings.GetAllAsync())
+                .FirstOrDefault();
 
+            if (setting == null)
+            {
+                return new SystemSettingDto(
+                "",
+                "",
+                "",
+                75,
+                "http://localhost:5000/api/v1/predict"
+            );
+            }
+
+            return new SystemSettingDto(
+                setting.InstituteName,
+                setting.AccreditationGrade,
+                setting.AcademicYear,
+                setting.LowAttendanceThreshold,
+                setting.FlaskApiEndpoint
+            );
+        }
+
+        public async Task<bool> UpdateSettingsAsync(SystemSettingDto dto)
+        {
+            var setting = (await _unitOfWork.Settings.GetAllAsync())
+                .FirstOrDefault();
+
+            if (setting == null)
+                return false;
+
+            setting.InstituteName = dto.InstituteName;
+            setting.AccreditationGrade = dto.AccreditationGrade;
+            setting.AcademicYear = dto.AcademicYear;
+            setting.LowAttendanceThreshold = dto.LowAttendanceThreshold;
+            setting.FlaskApiEndpoint = dto.FlaskApiEndpoint;
+
+            _unitOfWork.Settings.Update(setting);
+
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
     }
+
+
+}

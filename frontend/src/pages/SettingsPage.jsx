@@ -258,6 +258,42 @@ useEffect(() => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Academic Year
+                </label>
+
+                <input
+                  type="text"
+                  value={institute.academicYear}
+                  onChange={(e) =>
+                    setInstitute({
+                      ...institute,
+                      academicYear: e.target.value
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Flask ML API Endpoint
+                </label>
+
+                <input
+                  type="text"
+                  value={institute.flaskApiEndpoint}
+                  onChange={(e) =>
+                    setInstitute({
+                      ...institute,
+                      flaskApiEndpoint: e.target.value
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"
+                />
+              </div>
+
               <button
                 type="submit"
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all mt-2"
