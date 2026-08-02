@@ -1,4 +1,4 @@
-def validate_student_insights(data):
+def validate_student_analytics(data):
 
     if not data:
         return False, {
@@ -6,72 +6,68 @@ def validate_student_insights(data):
             "message": "Request body cannot be empty."
         }
 
-    if "attendance" not in data:
-        return False, {
-            "success": False,
-            "message": "'attendance' is required."
-        }
+    required_fields = [
+        "studentId",
+        "name",
+        "department",
+        "semester",
+        "email",
+        "attendance",
+        "internalMarks",
+        "assignmentMarks",
+        "practicalMarks",
+        "quizMarks",
+        "cgpa"
+    ]
 
-    attendance = data["attendance"]
+    for field in required_fields:
 
-    if not isinstance(attendance, (int, float)):
-        return False, {
-            "success": False,
-            "message": "Attendance must be a number."
-        }
-
-    if attendance < 0 or attendance > 100:
-        return False, {
-            "success": False,
-            "message": "Attendance must be between 0 and 100."
-        }
-
-    if "subjects" not in data:
-        return False, {
-            "success": False,
-            "message": "'subjects' is required."
-        }
-
-    subjects = data["subjects"]
-
-    if not isinstance(subjects, list):
-        return False, {
-            "success": False,
-            "message": "'subjects' must be a list."
-        }
-
-    if len(subjects) == 0:
-        return False, {
-            "success": False,
-            "message": "At least one subject is required."
-        }
-
-    for subject in subjects:
-
-        if "name" not in subject:
+        if field not in data:
             return False, {
                 "success": False,
-                "message": "Each subject must contain 'name'."
+                "message": f"'{field}' is required."
             }
 
-        if "marks" not in subject:
+    # Numeric validations
+    numeric_fields = [
+        "attendance",
+        "internalMarks",
+        "assignmentMarks",
+        "practicalMarks",
+        "quizMarks",
+        "cgpa"
+    ]
+
+    for field in numeric_fields:
+
+        if not isinstance(data[field], (int, float)):
             return False, {
                 "success": False,
-                "message": f"Marks missing for {subject['name']}."
+                "message": f"'{field}' must be numeric."
             }
 
-        marks = subject["marks"]
+    # Marks validation
+    mark_fields = [
+        "attendance",
+        "internalMarks",
+        "assignmentMarks",
+        "practicalMarks",
+        "quizMarks"
+    ]
 
-        if not isinstance(marks, (int, float)):
+    for field in mark_fields:
+
+        if data[field] < 0 or data[field] > 100:
             return False, {
                 "success": False,
-                "message": f"Marks for {subject['name']} must be numeric."
+                "message": f"'{field}' must be between 0 and 100."
             }
 
-        if marks < 0 or marks > 100:
-            return False, {
-                "success": False,
-                "message": f"Marks for {subject['name']} must be between 0 and 100."
-            }
+    # CGPA validation
+    if data["cgpa"] < 0 or data["cgpa"] > 10:
+        return False, {
+            "success": False,
+            "message": "'cgpa' must be between 0 and 10."
+        }
 
     return True, None

@@ -1,12 +1,12 @@
 from pathlib import Path
+from config import Config
 import joblib
 import pandas as pd
 
-# Get the directory where predict.py is located
+
 BASE_DIR = Path(__file__).resolve().parent
 
-# Build the model path
-MODEL_PATH = BASE_DIR.parent / "models" / "student_performance_model.pkl"
+MODEL_PATH = (BASE_DIR.parent / Path(Config.MODEL_PATH)).resolve()
 
 # Load the model
 model = joblib.load(MODEL_PATH)

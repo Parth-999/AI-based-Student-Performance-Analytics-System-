@@ -1,6 +1,4 @@
-def generate_class_analytics(data):
-
-    students = data["students"]
+def generate_class_analytics(students):
 
     total_students = len(students)
 
@@ -35,6 +33,7 @@ def generate_class_analytics(data):
 
         if reasons:
             risk_students.append({
+                "studentId": student["studentId"],
                 "name": student["name"],
                 "average": student["average"],
                 "attendance": student["attendance"],
@@ -70,7 +69,7 @@ def generate_class_analytics(data):
 
     "charts": {
 
-        "marks": {
+        "averageMarks": {
 
             "labels": chart_labels,
 

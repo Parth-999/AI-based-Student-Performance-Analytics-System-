@@ -11,6 +11,32 @@ __pycache__/
 # VS Code settings
 .vscode/
 
+# PyCharm settings
+.idea/
+
 # OS files
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# pytest cache (future)
+.pytest_cache/
+
+# Distribution files (future)
+build/
+dist/
+*.egg-info/
+
+# Logs
+logs/
+*.log
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+.venv/

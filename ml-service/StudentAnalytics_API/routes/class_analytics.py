@@ -16,7 +16,7 @@ def class_analytics():
     if not valid:
         return jsonify(error), 400
 
-    result = generate_class_analytics(data)
+    result = generate_class_analytics(data["students"])
 
     return jsonify({
         "success": True,
