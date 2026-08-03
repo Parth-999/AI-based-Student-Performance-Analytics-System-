@@ -46,6 +46,12 @@ public class AuthController : ControllerBase
         var response = await _authService.LoginAsync(request);
         return Ok(response);
     }
+
+    [HttpGet("generate-hash")]
+    public ActionResult<string> GenerateHash()
+    {
+        return Ok(BCrypt.Net.BCrypt.HashPassword("Teacher@123"));
+    }
 }
 
 [Authorize(Roles = "Teacher")]
