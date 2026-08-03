@@ -165,6 +165,10 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+Console.WriteLine("====================================");
+Console.WriteLine("StudentPerformanceAnalytics.Api Started");
+Console.WriteLine("====================================");
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders =
@@ -175,11 +179,18 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 // 9. Middleware Pipeline
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EduMetrics AI API v1"));
+//}
+
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EduMetrics AI API v1"));
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "EduMetrics AI API v1");
+});
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
@@ -195,5 +206,15 @@ using (var scope = app.Services.CreateScope())
 
     await DbSeeder.SeedDataAsync(context);
 }
+
+app.MapGet("/", () =>
+{
+    return Results.Ok(new
+    {
+        Application = "Student Performance Analytics API",
+        Status = "Running",
+        Environment = app.Environment.EnvironmentName
+    });
+});
 
 app.Run();
