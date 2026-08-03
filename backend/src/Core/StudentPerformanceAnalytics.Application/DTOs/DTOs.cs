@@ -300,3 +300,23 @@ public record StudentMarksDto(
     double TotalScore,
     string Grade
 );
+
+public record StudentPredictionHistoryDto(
+    DateTime PredictionDate,
+    double PredictedGpa,
+    string PredictedGrade,
+    string RiskLevel,
+    double ModelConfidence,
+    string Recommendation
+);
+
+public record ChangePasswordRequestDto(
+    string CurrentPassword,
+    string NewPassword,
+    string ConfirmPassword
+);
+
+public record ChangePasswordResponseDto(
+    bool Success,
+    string Message
+);

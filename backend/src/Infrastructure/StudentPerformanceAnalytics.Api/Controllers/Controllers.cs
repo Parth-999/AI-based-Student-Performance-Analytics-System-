@@ -20,6 +20,26 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<ActionResult<ChangePasswordResponseDto>> ChangePassword(
+    [FromBody] ChangePasswordRequestDto request)
+    {
+        var userId = User.GetUserId();
+
+        var result = await _authService.ChangePasswordAsync(
+            userId,
+            request
+        );
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginRequestDto request)
     {
@@ -342,5 +362,19 @@ public class MyController : ControllerBase
         var marks = await _studentPortalService.GetMyMarksAsync(studentId.Value);
 
         return Ok(marks);
+    }
+
+    [HttpGet("predictions")]
+    public async Task<ActionResult<List<StudentPredictionHistoryDto>>> GetPredictions()
+    {
+        var studentId = User.GetStudentId();
+
+        if (!studentId.HasValue)
+            return Unauthorized();
+
+        var predictions = await _studentPortalService
+            .GetMyPredictionsAsync(studentId.Value);
+
+        return Ok(predictions);
     }
 }

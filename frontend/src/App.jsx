@@ -20,6 +20,7 @@ import { StudentDashboardPage } from "./pages/StudentDashboardPage";
 import { MyProfilePage } from "./pages/MyProfilePage";
 import { StudentAttendancePage } from "./pages/StudentAttendancePage";
 import { StudentMarksPage } from "./pages/StudentMarksPage";
+import { StudentPredictionsPage } from "./pages/StudentPredictionsPage";
 
 // Modals
 import { AddStudentModal } from './components/modals/AddStudentModal';
@@ -73,7 +74,12 @@ const AppContent = () => {
                   : <StudentMarksPage />
           )}
           {activePage === 'analytics' && <AnalyticsPage />}
-          {activePage === 'predictions' && <AiPredictionsPage />}
+          {activePage === "predictions" &&
+          (
+              currentUser?.role === "Teacher"
+                  ? <AiPredictionsPage />
+                  : <StudentPredictionsPage />
+          )}
           {activePage === 'reports' && <ReportsPage />}
           {activePage === 'settings' && <SettingsPage />}
         </div>

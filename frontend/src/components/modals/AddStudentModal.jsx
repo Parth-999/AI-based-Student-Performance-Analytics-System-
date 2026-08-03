@@ -3,6 +3,7 @@ import { Modal } from '../common/Modal';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { DEPARTMENTS, SEMESTERS, DIVISIONS } from '../../mockData/studentData';
+import { validateStudent } from "../../validation/studentValidation";
 
 export const AddStudentModal = () => {
   const { activeModal, setActiveModal, addStudent } = useApp();
@@ -20,22 +21,37 @@ export const AddStudentModal = () => {
   guardianPhone: ''
 });
 
+const [errors, setErrors] = useState({});
+
 const handleSubmit = (e) => {
   e.preventDefault();
 
-  if (
-    !formData.registrationId ||
-    !formData.name ||
-    !formData.rollNo ||
-    !formData.email
-  ) {
+  const validationErrors = validateStudent({
+    registrationId: formData.registrationId,
+    rollNumber: formData.rollNo,
+    fullName: formData.name,
+    email: formData.email,
+    departmentName: formData.department,
+    semester: formData.semester,
+    division: formData.division,
+    guardianName: formData.guardianName,
+    guardianPhone: formData.guardianPhone
+});
+
+if (Object.keys(validationErrors).length > 0)
+{
+    setErrors(validationErrors);
+
     addToast(
-      "Validation Error",
-      "Please fill all required fields.",
-      "warning"
+        "Validation Error",
+        "Please correct the highlighted fields.",
+        "warning"
     );
+
     return;
-  }
+}
+
+setErrors({});
 
   addStudent(formData);
 
@@ -66,7 +82,11 @@ const handleSubmit = (e) => {
       onClose={() => setActiveModal(null)}
       title="Enroll New Student Record"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="space-y-4"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
 
@@ -77,26 +97,48 @@ const handleSubmit = (e) => {
 
             <input
               type="text"
-              required
               placeholder="STU-2026-001"
               value={formData.registrationId}
-              onChange={(e)=>
-                setFormData({...formData,registrationId:e.target.value})
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  registrationId: e.target.value
+                })
               }
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 focus:outline-none ${
+                errors.registrationId
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             />
+
+            {errors.registrationId && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.registrationId}
+              </p>
+            )}
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Roll Number*</label>
             <input
               type="text"
-              required
-              placeholder="CS2445"
               value={formData.rollNo}
-              onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+              onChange={(e) =>
+                setFormData({ ...formData, rollNo: e.target.value })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl ${
+                errors.rollNumber
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+              }`}
             />
+
+            {errors.rollNumber && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.rollNumber}
+              </p>
+            )}
           </div>
         </div>
 
@@ -107,14 +149,23 @@ const handleSubmit = (e) => {
     </label>
     <input
       type="text"
-      required
       placeholder="Rahul Sharma"
       value={formData.name}
       onChange={(e) =>
         setFormData({ ...formData, name: e.target.value })
       }
-      className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+      className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 focus:outline-none ${
+        errors.fullName
+          ? "border border-red-500 bg-red-50 dark:bg-red-950"
+          : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+      }`}
     />
+
+    {errors.fullName && (
+      <p className="mt-1 text-xs text-red-500">
+        {errors.fullName}
+      </p>
+    )}
   </div>
 
   <div>
@@ -123,14 +174,23 @@ const handleSubmit = (e) => {
     </label>
     <input
       type="email"
-      required
       placeholder="rahul.sharma@institution.edu"
       value={formData.email}
       onChange={(e) =>
         setFormData({ ...formData, email: e.target.value })
       }
-      className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+      className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 focus:outline-none ${
+        errors.email
+          ? "border border-red-500 bg-red-50 dark:bg-red-950"
+          : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+      }`}
     />
+
+    {errors.email && (
+      <p className="mt-1 text-xs text-red-500">
+        {errors.email}
+      </p>
+    )}
   </div>
 </div>
 
@@ -138,43 +198,86 @@ const handleSubmit = (e) => {
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Department*</label>
             <select
-              required
               value={formData.department}
-              onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500"
+              onChange={(e) =>
+                setFormData({ ...formData, department: e.target.value })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 ${
+                errors.departmentName
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             >
               {DEPARTMENTS.map(d => (
                 <option key={d} value={d}>{d}</option>
               ))}
             </select>
+
+            {errors.departmentName && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.departmentName}
+              </p>
+            )}
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Semester*</label>
             <select
-              required
               value={formData.semester}
-              onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  semester: Number(e.target.value)
+                })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 ${
+                errors.semester
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             >
               {SEMESTERS.map(s => (
-                <option key={s} value={s}>Semester {s}</option>
+                <option key={s} value={s}>
+                  Semester {s}
+                </option>
               ))}
             </select>
+
+            {errors.semester && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.semester}
+              </p>
+            )}
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Division*</label>
             <select
-              required
               value={formData.division}
-              onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  division: e.target.value
+                })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 ${
+                errors.division
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             >
               {DIVISIONS.map(d => (
-                <option key={d} value={d}>Division {d}</option>
+                <option key={d} value={d}>
+                  Division {d}
+                </option>
               ))}
             </select>
+
+            {errors.division && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.division}
+              </p>
+            )}
           </div>
         </div>
 
@@ -183,24 +286,52 @@ const handleSubmit = (e) => {
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Guardian Name*</label>
             <input
               type="text"
-              required
               placeholder="Vijay Sharma"
               value={formData.guardianName}
-              onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  guardianName: e.target.value
+                })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 focus:outline-none ${
+                errors.guardianName
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             />
+
+            {errors.guardianName && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.guardianName}
+              </p>
+            )}
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Guardian Contact Phone*</label>
             <input
               type="text"
-              required
               placeholder="+91"
               value={formData.guardianPhone}
-              onChange={(e) => setFormData({ ...formData, guardianPhone: e.target.value })}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  guardianPhone: e.target.value
+                })
+              }
+              className={`w-full px-3 py-2 text-xs rounded-xl focus:ring-2 focus:outline-none ${
+                errors.guardianPhone
+                  ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                  : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary-500"
+              }`}
             />
+
+            {errors.guardianPhone && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.guardianPhone}
+              </p>
+            )}
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { MarksDistributionChart } from '../components/charts/MarksDistributionChart';
 import { SubjectPerformanceChart } from '../components/charts/SubjectPerformanceChart';
+import { validateMarks } from "../validation/marksValidation";
 import {
   GraduationCap,
   Upload,
@@ -39,6 +40,8 @@ export const MarksManagementPage = () => {
 ];
 
   const [marksState, setMarksState] = useState({});
+
+  const [markErrors, setMarkErrors] = useState({});
 
  useEffect(() => {
 
@@ -110,6 +113,39 @@ export const MarksManagementPage = () => {
         finalExamMarks: marksState[student.id]?.finalExam || 0
 
     }));
+
+    const errors = {};
+
+marksList.forEach(mark => {
+
+    const validation = validateMarks({
+        assignmentMarks: mark.assignmentMarks,
+        internalMarks: mark.internalMarks,
+        practicalMarks: mark.practicalMarks,
+        finalExamMarks: mark.finalExamMarks
+    });
+
+    if (Object.keys(validation).length > 0)
+    {
+        errors[mark.studentId] = validation;
+    }
+
+});
+
+if (Object.keys(errors).length > 0)
+{
+    setMarkErrors(errors);
+
+    addToast(
+        "Validation Error",
+        "Please correct invalid marks before saving.",
+        "warning"
+    );
+
+    return;
+}
+
+setMarkErrors({});
 
     await saveMarks(marksList);
 
@@ -310,7 +346,11 @@ export const MarksManagementPage = () => {
                         max="20"
                         value={scores.assignment}
                         onChange={(e) => handleInputChange(s.id, 'assignment', e.target.value)}
-                        className="w-16 px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-center font-bold"
+                        className={`w-16 px-2 py-1 rounded-lg text-center font-bold ${
+                          markErrors[s.id]?.assignmentMarks
+                            ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                            : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                        }`}
                       />
                     </td>
                     <td className="p-3">
@@ -320,7 +360,11 @@ export const MarksManagementPage = () => {
                         max="30"
                         value={scores.internal}
                         onChange={(e) => handleInputChange(s.id, 'internal', e.target.value)}
-                        className="w-16 px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-center font-bold"
+                        className={`w-16 px-2 py-1 rounded-lg text-center font-bold ${
+                          markErrors[s.id]?.internalMarks
+                            ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                            : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                        }`}
                       />
                     </td>
                     <td className="p-3">
@@ -330,7 +374,11 @@ export const MarksManagementPage = () => {
                         max="20"
                         value={scores.practical}
                         onChange={(e) => handleInputChange(s.id, 'practical', e.target.value)}
-                        className="w-16 px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-center font-bold"
+                        className={`w-16 px-2 py-1 rounded-lg text-center font-bold ${
+                          markErrors[s.id]?.practicalMarks
+                            ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                            : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                        }`}
                       />
                     </td>
                     <td className="p-3">
@@ -340,7 +388,11 @@ export const MarksManagementPage = () => {
                         max="100"
                         value={scores.finalExam}
                         onChange={(e) => handleInputChange(s.id, 'finalExam', e.target.value)}
-                        className="w-20 px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-center font-bold"
+                        className={`w-20 px-2 py-1 rounded-lg text-center font-bold ${
+                          markErrors[s.id]?.finalExamMarks
+                            ? "border border-red-500 bg-red-50 dark:bg-red-950"
+                            : "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                        }`}
                       />
                     </td>
                     <td className="p-3 font-black text-slate-900 dark:text-white text-sm">{total}%</td>

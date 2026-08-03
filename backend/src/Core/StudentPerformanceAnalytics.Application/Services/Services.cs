@@ -15,6 +15,8 @@ namespace StudentPerformanceAnalytics.Application.Services;
 public interface IAuthService
 {
     Task<AuthResponseDto> LoginAsync(LoginRequestDto request);
+
+    Task<ChangePasswordResponseDto> ChangePasswordAsync(Guid userId, ChangePasswordRequestDto request);
 }
 
 public interface IStudentService
@@ -79,6 +81,8 @@ public interface IStudentPortalService
     Task<List<StudentAttendanceDto>> GetMyAttendanceAsync(Guid studentId);
 
     Task<List<StudentMarksDto>> GetMyMarksAsync(Guid studentId);
+
+    Task<List<StudentPredictionHistoryDto>> GetMyPredictionsAsync(Guid studentId);
 }
 
 // --- Service Implementations ---
@@ -124,6 +128,65 @@ public class AuthService : IAuthService
             user.Title,
             user.StudentId
         );
+
+    }
+
+    public async Task<ChangePasswordResponseDto> ChangePasswordAsync(Guid userId, ChangePasswordRequestDto request)
+    {
+        var user = await _unitOfWork.Users.GetByIdAsync(userId);
+
+        if (user == null)
+        {
+            return new ChangePasswordResponseDto(
+                false,
+                "User not found."
+            );
+        }
+
+        bool validPassword = BCrypt.Net.BCrypt.Verify(
+            request.CurrentPassword,
+            user.PasswordHash
+        );
+
+        if (!validPassword)
+        {
+            return new ChangePasswordResponseDto(
+                false,
+                "Current password is incorrect."
+            );
+        }
+
+        if (request.NewPassword != request.ConfirmPassword)
+        {
+            return new ChangePasswordResponseDto(
+                false,
+                "New password and confirmation password do not match."
+            );
+        }
+
+        if (BCrypt.Net.BCrypt.Verify(
+                request.NewPassword,
+                user.PasswordHash))
+        {
+            return new ChangePasswordResponseDto(
+                false,
+                "New password must be different from the current password."
+            );
+        }
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(
+            request.NewPassword
+        );
+
+        _unitOfWork.Users.Update(user);
+
+        await _unitOfWork.CompleteAsync();
+
+        return new ChangePasswordResponseDto(
+            true,
+            "Password changed successfully."
+        );
+
     }
 }
 
@@ -1044,6 +1107,28 @@ public class AttendanceService : IAttendanceService
                     m.FinalExamMarks,
                     m.TotalScore,
                     m.Grade
+                ))
+                .ToList();
+        }
+
+        public async Task<List<StudentPredictionHistoryDto>> GetMyPredictionsAsync(Guid studentId)
+        {
+            var student = await _unitOfWork
+                .Students
+                .GetStudentWithDetailsAsync(studentId);
+
+            if (student == null)
+                return new List<StudentPredictionHistoryDto>();
+
+            return student.Predictions
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new StudentPredictionHistoryDto(
+                    p.CreatedAt,
+                    p.PredictedGpa,
+                    p.PredictedGrade,
+                    p.RiskLevel.ToString(),
+                    p.ModelConfidence,
+                    p.Recommendation
                 ))
                 .ToList();
         }
