@@ -18,10 +18,28 @@ using StudentPerformanceAnalytics.Infrastructure.Persistence;
 using System;
 using System.Text;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Configuration;
 using static StudentPerformanceAnalytics.Application.Services.PredictionService;
 
 
-var builder = WebApplication.CreateBuilder(args);
+var options = new WebApplicationOptions
+{
+    Args = args
+};
+
+var builder = WebApplication.CreateBuilder(options);
+
+// Remove the default configuration sources
+builder.Configuration.Sources.Clear();
+
+// Re-add configuration without file watching
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+    .AddJsonFile(
+        $"appsettings.{builder.Environment.EnvironmentName}.json",
+        optional: true,
+        reloadOnChange: false)
+    .AddEnvironmentVariables();
 
 // 1. Add Services & DbContext
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
