@@ -9,8 +9,10 @@ from routes.class_analytics import class_bp
 from routes.student import student_bp
 from routes.teacher import teacher_bp
 from routes.admin import admin_bp
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 register_error_handlers(app)
 app.config.from_object(Config)
 
