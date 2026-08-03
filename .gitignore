@@ -49,3 +49,16 @@ logs/
 
 Thumbs.db
 .DS_Store
+
+##################################################
+# Environment Variables
+##################################################
+
+frontend/.env
+backend/**/appsettings.Development.json
+
+ml-service/**/.env
+
+.env
+.env.*
+!.env.example

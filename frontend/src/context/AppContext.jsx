@@ -49,11 +49,11 @@ export const AppProvider = ({ children }) => {
 
   // ML API configuration state
   const [mlApiConfig, setMlApiConfig] = useState({
-    endpointUrl: 'http://localhost:5000/api/predict',
+    endpointUrl: import.meta.env.VITE_ML_API_URL,
     status: 'Simulated Data Active',
     lastConfidence: 94.8,
     isLive: false
-  });
+});
 
   const loadStudents = async (filterData = filters) => {
   try {
