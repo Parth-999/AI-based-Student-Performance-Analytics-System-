@@ -3,7 +3,7 @@ namespace StudentPerformanceAnalytics.Domain.Enums;
 public enum UserRole
 {
     Teacher,
-    Admin
+    Student
 }
 
 public enum RiskLevel

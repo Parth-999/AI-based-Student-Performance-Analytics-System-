@@ -89,6 +89,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IStudentPortalService, StudentPortalService>();
+
 // 7. CORS policy for React Frontend
 builder.Services.AddCors(options =>
 {

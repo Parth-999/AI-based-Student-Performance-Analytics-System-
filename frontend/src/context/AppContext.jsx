@@ -364,6 +364,8 @@ const loginUser = async (email, password, role) => {
 
         localStorage.setItem("user", JSON.stringify(user));
 
+        api.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
+
         setCurrentUser({
 
             name: user.name,

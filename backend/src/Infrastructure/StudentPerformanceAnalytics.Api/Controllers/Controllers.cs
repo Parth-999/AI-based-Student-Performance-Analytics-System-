@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using StudentPerformanceAnalytics.Api.Extensions;
+using StudentPerformanceAnalytics.Application.DTOs;
+using StudentPerformanceAnalytics.Application.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using StudentPerformanceAnalytics.Application.DTOs;
-using StudentPerformanceAnalytics.Application.Services;
 
 namespace StudentPerformanceAnalytics.Api.Controllers;
 
@@ -27,6 +28,7 @@ public class AuthController : ControllerBase
     }
 }
 
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class StudentsController : ControllerBase
@@ -82,6 +84,8 @@ public class StudentsController : ControllerBase
     }
 }
 
+
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class AttendanceController : ControllerBase
@@ -112,6 +116,7 @@ public class AttendanceController : ControllerBase
     }
 }
 
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class MarksController : ControllerBase
@@ -152,6 +157,7 @@ public class MarksController : ControllerBase
     }
 }
 
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class AnalyticsController : ControllerBase
@@ -171,6 +177,7 @@ public class AnalyticsController : ControllerBase
     }
 }
 
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class PredictionsController : ControllerBase
@@ -196,6 +203,8 @@ public class PredictionsController : ControllerBase
         return Ok(new { message = "Flask Machine Learning model inference complete." });
     }
 }
+
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class ReportsController : ControllerBase
@@ -230,6 +239,7 @@ public class ReportsController : ControllerBase
     }
 }
 
+[Authorize(Roles = "Teacher")]
 [ApiController]
 [Route("api/[controller]")]
 public class SettingsController : ControllerBase
@@ -260,5 +270,77 @@ public class SettingsController : ControllerBase
             success = true,
             message = "Institutional settings saved successfully."
         });
+    }
+}
+
+[Authorize(Roles = "Student")]
+[ApiController]
+[Route("api/my")]
+public class MyController : ControllerBase
+{
+    private readonly IStudentPortalService _studentPortalService;
+
+    public MyController(IStudentPortalService studentPortalService)
+    {
+        _studentPortalService = studentPortalService;
+    }
+
+    [HttpGet("profile")]
+    public async Task<ActionResult<StudentDetailDto>> GetProfile()
+    {
+        var studentId = User.GetStudentId();
+
+        if (!studentId.HasValue)
+            return Unauthorized();
+
+        var profile = await _studentPortalService.GetMyProfileAsync(studentId.Value);
+
+        if (profile == null)
+            return NotFound();
+
+        return Ok(profile);
+    }
+
+    [HttpGet("dashboard")]
+    public async Task<ActionResult<StudentDashboardDto>> GetDashboard()
+    {
+        var studentId = User.GetStudentId();
+
+        if (!studentId.HasValue)
+            return Unauthorized();
+
+        var dashboard = await _studentPortalService.GetMyDashboardAsync(studentId.Value);
+
+        if (dashboard == null)
+            return NotFound();
+
+        return Ok(dashboard);
+    }
+
+    [HttpGet("attendance")]
+    public async Task<ActionResult<List<StudentAttendanceDto>>> GetAttendance()
+    {
+        var studentId = User.GetStudentId();
+
+        if (!studentId.HasValue)
+            return Unauthorized();
+
+        var attendance = await _studentPortalService
+            .GetMyAttendanceAsync(studentId.Value);
+
+        return Ok(attendance);
+    }
+
+    [HttpGet("marks")]
+    public async Task<ActionResult<List<StudentMarksDto>>> GetMarks()
+    {
+        var studentId = User.GetStudentId();
+
+        if (!studentId.HasValue)
+            return Unauthorized();
+
+        var marks = await _studentPortalService.GetMyMarksAsync(studentId.Value);
+
+        return Ok(marks);
     }
 }

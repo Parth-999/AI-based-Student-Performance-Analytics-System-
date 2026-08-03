@@ -25,17 +25,58 @@ export const Sidebar = () => {
     logoutUser
   } = useApp();
 
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'students', label: 'Student Management', icon: Users, badge: '80+' },
-    { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
-    { id: 'marks', label: 'Marks Management', icon: GraduationCap },
-    { id: 'analytics', label: 'Performance Analytics', icon: LineChart, highlight: true },
-    { id: 'predictions', label: 'AI Predictions', icon: BrainCircuit, badge: 'ML', badgeColor: 'bg-emerald-500 text-white' },
-    { id: 'reports', label: 'Reports', icon: FileSpreadsheet },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  // const navItems = [
+  //   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  //   { id: 'students', label: 'Student Management', icon: Users, badge: '80+' },
+  //   { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
+  //   { id: 'marks', label: 'Marks Management', icon: GraduationCap },
+  //   { id: 'analytics', label: 'Performance Analytics', icon: LineChart, highlight: true },
+  //   { id: 'predictions', label: 'AI Predictions', icon: BrainCircuit, badge: 'ML', badgeColor: 'bg-emerald-500 text-white' },
+  //   { id: 'reports', label: 'Reports', icon: FileSpreadsheet },
+  //   { id: 'settings', label: 'Settings', icon: Settings },
+  // ];
 
+  const teacherNavItems = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "students", label: "Student Management", icon: Users, badge: "80+" },
+  { id: "attendance", label: "Attendance", icon: CalendarCheck },
+  { id: "marks", label: "Marks Management", icon: GraduationCap },
+  { id: "analytics", label: "Performance Analytics", icon: LineChart, highlight: true },
+  {
+    id: "predictions",
+    label: "AI Predictions",
+    icon: BrainCircuit,
+    badge: "ML",
+    badgeColor: "bg-emerald-500 text-white"
+  },
+  { id: "reports", label: "Reports", icon: FileSpreadsheet },
+  { id: "settings", label: "Settings", icon: Settings }
+];
+
+const studentNavItems = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+
+  { id: "profile", label: "My Profile", icon: Users },
+
+  { id: "attendance", label: "Attendance", icon: CalendarCheck },
+
+  { id: "marks", label: "Marks", icon: GraduationCap },
+
+  {
+    id: "predictions",
+    label: "AI Prediction",
+    icon: BrainCircuit
+  },
+
+  { id: "settings", label: "Settings", icon: Settings }
+];
+
+
+const navItems =
+    currentUser?.role === "Teacher"
+        ? teacherNavItems
+        : studentNavItems;
+        
   return (
     <aside
       className={`fixed top-0 left-0 z-40 h-screen bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 transition-all duration-300 flex flex-col justify-between ${

@@ -5,7 +5,7 @@ using StudentPerformanceAnalytics.Domain.Enums;
 namespace StudentPerformanceAnalytics.Application.DTOs;
 
 // --- Auth DTOs ---
-public record LoginRequestDto(string Email, string Password, string Role);
+public record LoginRequestDto(string Email, string Password);
 
 public record AuthResponseDto(
     string Token,
@@ -14,7 +14,8 @@ public record AuthResponseDto(
     string Email,
     string Department,
     string Avatar,
-    string Title
+    string Title,
+    Guid? StudentId
 );
 
 // --- Student DTOs ---
@@ -59,11 +60,11 @@ public record StudentDetailDto(
     string Status,
     string GuardianName,
     string GuardianPhone,
-    string AiRecommendation,
-    SkillsDto Skills,
-    List<SubjectMarkDto> SubjectMarks,
-    List<double> AttendanceHistory,
-    List<double> GpaHistory
+    string AiRecommendation
+    //SkillsDto Skills,
+    //List<SubjectMarkDto> SubjectMarks,
+    //List<double> AttendanceHistory,
+    //List<double> GpaHistory
 );
 
 public record CreateStudentDto(
@@ -265,4 +266,37 @@ public record SystemSettingDto(
     string AcademicYear,
     double LowAttendanceThreshold,
     string FlaskApiEndpoint
+);
+
+public record StudentDashboardDto(
+    string FullName,
+    string Department,
+    string AvatarUrl,
+
+    double AttendancePercentage,
+    double AverageMarks,
+
+    double CurrentGpa,
+    double PredictedGpa,
+
+    string PredictedGrade,
+    string RiskLevel,
+
+    string AiRecommendation
+);
+
+public record StudentAttendanceDto(
+    DateTime Date,
+    string Subject,
+    string Status
+);
+
+public record StudentMarksDto(
+    string SubjectName,
+    double AssignmentMarks,
+    double InternalMarks,
+    double PracticalMarks,
+    double FinalExamMarks,
+    double TotalScore,
+    string Grade
 );

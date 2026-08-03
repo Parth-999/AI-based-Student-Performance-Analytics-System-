@@ -68,6 +68,17 @@ public interface ISettingsService
     Task<SystemSettingDto> GetSettingsAsync();
 
     Task<bool> UpdateSettingsAsync(SystemSettingDto dto);
+
+}
+
+public interface IStudentPortalService
+{
+    Task<StudentDetailDto?> GetMyProfileAsync(Guid studentId);
+    Task<StudentDashboardDto?> GetMyDashboardAsync(Guid studentId);
+
+    Task<List<StudentAttendanceDto>> GetMyAttendanceAsync(Guid studentId);
+
+    Task<List<StudentMarksDto>> GetMyMarksAsync(Guid studentId);
 }
 
 // --- Service Implementations ---
@@ -110,7 +121,8 @@ public class AuthService : IAuthService
             user.Email,
             user.Department,
             user.AvatarUrl,
-            user.Title
+            user.Title,
+            user.StudentId
         );
     }
 }
@@ -140,8 +152,34 @@ public class StudentService : IStudentService
         return _mapper.Map<StudentDetailDto>(student);
     }
 
+
+
     public async Task<StudentSummaryDto> CreateStudentAsync(CreateStudentDto dto)
     {
+        // Check if login email already exists
+        var existingUser = await _unitOfWork.Users.FindAsync(u => u.Email == dto.Email);
+
+        if (existingUser.Any())
+        {
+            throw new InvalidOperationException("A user with this email already exists.");
+        }
+
+        var existingRegistration = await _unitOfWork.Students.FindAsync(
+            s => s.RegistrationId == dto.RegistrationId);
+
+        if (existingRegistration.Any())
+        {
+            throw new InvalidOperationException("Registration ID already exists.");
+        }
+
+        var existingRollNumber = await _unitOfWork.Students.FindAsync(
+            s => s.RollNumber == dto.RollNumber);
+
+        if (existingRollNumber.Any())
+        {
+            throw new InvalidOperationException("Roll Number already exists.");
+        }
+
         var depts = await _unitOfWork.Departments.FindAsync(d => d.Name == dto.DepartmentName);
         var dept = depts.FirstOrDefault();
 
@@ -155,6 +193,7 @@ public class StudentService : IStudentService
 
             await _unitOfWork.Departments.AddAsync(dept);
             await _unitOfWork.CompleteAsync();
+
         }
 
         var student = new Student
@@ -191,6 +230,28 @@ public class StudentService : IStudentService
         await _unitOfWork.Students.AddAsync(student);
         await _unitOfWork.CompleteAsync();
 
+        var user = new User
+        {
+            Email = student.Email,
+            FullName = student.FullName,
+
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Student@123"),
+
+            Role = UserRole.Student,
+
+            Department = dto.DepartmentName,
+
+            Title = "Student",
+
+            AvatarUrl = student.AvatarUrl,
+
+            StudentId = student.Id
+        };
+
+        await _unitOfWork.Users.AddAsync(user);
+
+        await _unitOfWork.CompleteAsync();
+
         return _mapper.Map<StudentSummaryDto>(student);
     }
 
@@ -221,6 +282,20 @@ public class StudentService : IStudentService
 
         _unitOfWork.Students.Update(student);
 
+        var users = await _unitOfWork.Users.FindAsync(u => u.StudentId == student.Id);
+
+        var user = users.FirstOrDefault();
+
+        if (user != null)
+        {
+            user.FullName = student.FullName;
+            user.Email = student.Email;
+            user.Department = dto.DepartmentName;
+            user.AvatarUrl = student.AvatarUrl;
+
+            _unitOfWork.Users.Update(user);
+        }
+
         await _unitOfWork.CompleteAsync();
 
         return true;
@@ -229,7 +304,17 @@ public class StudentService : IStudentService
     public async Task<bool> DeleteStudentAsync(Guid id)
     {
         var student = await _unitOfWork.Students.GetByIdAsync(id);
+
         if (student == null) return false;
+
+        var users = await _unitOfWork.Users.FindAsync(u => u.StudentId == student.Id);
+
+        var user = users.FirstOrDefault();
+
+        if (user != null)
+        {
+            _unitOfWork.Users.Delete(user);
+        }
 
         _unitOfWork.Students.Delete(student);
         await _unitOfWork.CompleteAsync();
@@ -867,6 +952,100 @@ public class AttendanceService : IAttendanceService
             await _unitOfWork.CompleteAsync();
 
             return true;
+        }
+    }
+
+    public class StudentPortalService : IStudentPortalService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public StudentPortalService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<StudentDetailDto?> GetMyProfileAsync(Guid studentId)
+        {
+            var student = await _unitOfWork
+                .Students
+                .GetStudentWithDetailsAsync(studentId);
+
+            if (student == null)
+                return null;
+
+            return _mapper.Map<StudentDetailDto>(student);
+        }
+
+        public async Task<StudentDashboardDto?> GetMyDashboardAsync(Guid studentId)
+        {
+            var student = await _unitOfWork
+                .Students
+                .GetStudentWithDetailsAsync(studentId);
+
+            if (student == null)
+                return null;
+
+            return new StudentDashboardDto(
+                student.FullName,
+                student.Department?.Name ?? "",
+                student.AvatarUrl,
+
+                student.AttendancePercentage,
+                student.AverageMarks,
+
+                student.CurrentGpa,
+                student.PredictedGpa,
+
+                student.PredictedGrade,
+                student.RiskLevel.ToString(),
+
+                student.AiRecommendation
+            );
+        }
+
+        public async Task<List<StudentAttendanceDto>> GetMyAttendanceAsync(Guid studentId)
+        {
+            var student = await _unitOfWork
+                .Students
+                .GetStudentWithDetailsAsync(studentId);
+
+            if (student == null)
+                return new List<StudentAttendanceDto>();
+
+            return student.AttendanceRecords
+                .OrderByDescending(a => a.Date)
+                .Select(a => new StudentAttendanceDto(
+                    a.Date,
+                    a.SubjectName,
+                    a.Status.ToString()
+                ))
+                .ToList();
+        }
+
+        public async Task<List<StudentMarksDto>> GetMyMarksAsync(Guid studentId)
+        {
+            var student = await _unitOfWork
+                .Students
+                .GetStudentWithDetailsAsync(studentId);
+
+            if (student == null)
+                return new List<StudentMarksDto>();
+
+            return student.SubjectMarks
+                .Select(m => new StudentMarksDto(
+                    m.SubjectName,
+                    m.AssignmentMarks,
+                    m.InternalMarks,
+                    m.PracticalMarks,
+                    m.FinalExamMarks,
+                    m.TotalScore,
+                    m.Grade
+                ))
+                .ToList();
         }
     }
 

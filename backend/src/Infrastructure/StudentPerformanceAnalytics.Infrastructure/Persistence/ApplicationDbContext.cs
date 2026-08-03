@@ -26,6 +26,12 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(s => s.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Student)
+            .WithOne(s => s.User)
+            .HasForeignKey<User>(u => u.StudentId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<AttendanceRecord>()
             .HasOne(a => a.Student)
             .WithMany(s => s.AttendanceRecords)

@@ -20,6 +20,10 @@ public class User : BaseEntity
     public string Department { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string AvatarUrl { get; set; } = string.Empty;
+
+    public Guid? StudentId { get; set; }
+
+    public Student? Student { get; set; }
 }
 
 public class Department : BaseEntity
@@ -69,6 +73,9 @@ public class Student : BaseEntity
     public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
     public ICollection<SubjectMark> SubjectMarks { get; set; } = new List<SubjectMark>();
     public ICollection<AiPrediction> Predictions { get; set; } = new List<AiPrediction>();
+
+    // NEW
+    public User? User { get; set; }
 }
 
 public class AttendanceRecord : BaseEntity

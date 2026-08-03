@@ -7,9 +7,9 @@ export const LoginPage = () => {
   const { loginUser } = useApp();
   const { addToast } = useToast();
 
-  const [email, setEmail] = useState('sarah.jenkins@institution.edu');
-  const [password, setPassword] = useState('••••••••••••');
-  const [role, setRole] = useState('Teacher');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Teacher");
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = async (e) => {
@@ -38,11 +38,9 @@ export const LoginPage = () => {
     await loginUser(email, password, role);
 
     addToast(
-      "Welcome Back",
-      `Logged in successfully as ${
-        role === "Admin" ? "Administrator" : "Teacher"
-      }.`,
-      "success"
+        "Welcome Back",
+        `Logged in successfully as ${role}.`,
+        "success"
     );
 
   } catch (err) {
@@ -117,7 +115,7 @@ export const LoginPage = () => {
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome Back</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Please sign in to access your faculty dashboard and analytics cell.
+                Please sign in to access your EduMetrics AI dashboard.
               </p>
             </div>
 
@@ -140,8 +138,8 @@ export const LoginPage = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setRole('Admin');
-                  setEmail('robert.vance@institution.edu');
+                  setRole('Student');
+                  setEmail('lol@gmail.com');
                 }}
                 className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
                   role === 'Admin'
@@ -149,7 +147,7 @@ export const LoginPage = () => {
                     : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'
                 }`}
               >
-                Administrator Portal
+                Student Portal
               </button>
             </div>
 

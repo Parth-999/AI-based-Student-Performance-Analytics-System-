@@ -16,6 +16,10 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { AiPredictionsPage } from './pages/AiPredictionsPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { StudentDashboardPage } from "./pages/StudentDashboardPage";
+import { MyProfilePage } from "./pages/MyProfilePage";
+import { StudentAttendancePage } from "./pages/StudentAttendancePage";
+import { StudentMarksPage } from "./pages/StudentMarksPage";
 
 // Modals
 import { AddStudentModal } from './components/modals/AddStudentModal';
@@ -27,7 +31,7 @@ import { MlApiConfigModal } from './components/modals/MlApiConfigModal';
 import { EditStudentModal } from './components/modals/EditStudentModal';
 
 const AppContent = () => {
-  const { isAuthenticated, activePage, sidebarCollapsed } = useApp();
+  const { isAuthenticated, activePage, sidebarCollapsed, currentUser } = useApp();
 
   if (!isAuthenticated || activePage === 'login') {
     return <LoginPage />;
@@ -48,10 +52,26 @@ const AppContent = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto">
-          {activePage === 'dashboard' && <DashboardPage />}
+          {activePage === "dashboard" &&
+          (
+              currentUser.role === "Teacher"
+                  ? <DashboardPage />
+                  : <StudentDashboardPage />
+          )}
+          {activePage === "profile" && <MyProfilePage />}
           {activePage === 'students' && <StudentManagementPage />}
-          {activePage === 'attendance' && <AttendancePage />}
-          {activePage === 'marks' && <MarksManagementPage />}
+          {activePage === "attendance" &&
+          (
+              currentUser?.role === "Teacher"
+                  ? <AttendancePage />
+                  : <StudentAttendancePage />
+          )}
+          {activePage === "marks" &&
+          (
+              currentUser?.role === "Teacher"
+                  ? <MarksManagementPage />
+                  : <StudentMarksPage />
+          )}
           {activePage === 'analytics' && <AnalyticsPage />}
           {activePage === 'predictions' && <AiPredictionsPage />}
           {activePage === 'reports' && <ReportsPage />}
