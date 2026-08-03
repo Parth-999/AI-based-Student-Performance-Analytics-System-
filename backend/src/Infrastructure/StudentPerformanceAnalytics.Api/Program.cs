@@ -17,6 +17,7 @@ using StudentPerformanceAnalytics.Infrastructure.ExternalServices;
 using StudentPerformanceAnalytics.Infrastructure.Persistence;
 using System;
 using System.Text;
+using Microsoft.AspNetCore.HttpOverrides;
 using static StudentPerformanceAnalytics.Application.Services.PredictionService;
 
 
@@ -24,7 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Add Services & DbContext
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
-var useInMemory = builder.Configuration.GetValue<bool>("ConnectionStrings:UseInMemoryDatabase", true);
+var useInMemory = builder.Configuration.GetValue<bool>("ConnectionStrings:UseInMemoryDatabase", false);
 
 if (useInMemory)
 {
@@ -78,7 +79,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;
+    options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -98,7 +99,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+        //policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+            policy
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -144,6 +146,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
 
 // 9. Middleware Pipeline
 app.UseMiddleware<GlobalExceptionMiddleware>();
