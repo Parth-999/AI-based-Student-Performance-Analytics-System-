@@ -19,7 +19,7 @@ public class FlaskMlApiClient : IFlaskMlApiClient
         _httpClient = httpClient;
     }
 
-    public async Task<AiPrediction> PredictStudentPerformanceAsync(Student student, SubjectMark marks, string endpointUrl)
+    public async Task<AiPrediction> PredictStudentPerformanceAsync(Student student, SubjectMark marks)
     {
         var assignmentPercentage =
             (marks.AssignmentMarks / 20.0) * 100.0;
@@ -48,7 +48,7 @@ public class FlaskMlApiClient : IFlaskMlApiClient
 
         try
         {
-            var response = await _httpClient.PostAsJsonAsync(endpointUrl, payload);
+            var response = await _httpClient.PostAsJsonAsync("/api/v1/predict", payload);
 
             if (response.IsSuccessStatusCode)
             {

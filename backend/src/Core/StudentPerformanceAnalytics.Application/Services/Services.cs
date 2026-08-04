@@ -7,6 +7,7 @@ using StudentPerformanceAnalytics.Application.DTOs;
 using StudentPerformanceAnalytics.Domain.Entities;
 using StudentPerformanceAnalytics.Domain.Enums;
 using StudentPerformanceAnalytics.Domain.Interfaces;
+using Microsoft.Extensions.Configuration;
 using BCrypt.Net;
 
 namespace StudentPerformanceAnalytics.Application.Services;
@@ -943,7 +944,7 @@ public class AttendanceService : IAttendanceService
                 92.1,
                 students.Count(s => s.RiskLevel == RiskLevel.High || s.RiskLevel == RiskLevel.Critical),
                 42,
-                "http://localhost:5000/api/v1/predict",
+                "Configured via Azure Environment Variable",
                 "Live Flask ML Service",
                 predictions
             );
@@ -952,8 +953,8 @@ public class AttendanceService : IAttendanceService
         public async Task<bool> RunInferenceAsync()
         {
             var students = await _unitOfWork.Students.GetAllAsync();
-            var settingsList = await _unitOfWork.Settings.GetAllAsync();
-            var endpoint = settingsList.FirstOrDefault()?.FlaskApiEndpoint ?? "http://localhost:5000/api/v1/predict";
+            //var settingsList = await _unitOfWork.Settings.GetAllAsync();
+            //var endpoint = settingsList.FirstOrDefault()?.FlaskApiEndpoint ?? "http://localhost:5000/api/v1/predict";
 
             foreach (var s in students)
             {
@@ -968,8 +969,7 @@ public class AttendanceService : IAttendanceService
 
                 var prediction = await _flaskClient.PredictStudentPerformanceAsync(
                     s,
-                    latestMarks,
-                    endpoint);
+                    latestMarks);
 
                 s.PredictedGpa = prediction.PredictedGpa;
                 s.PredictedGrade = prediction.PredictedGrade;
