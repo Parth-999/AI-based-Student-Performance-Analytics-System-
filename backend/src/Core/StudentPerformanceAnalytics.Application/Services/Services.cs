@@ -7,7 +7,6 @@ using StudentPerformanceAnalytics.Application.DTOs;
 using StudentPerformanceAnalytics.Domain.Entities;
 using StudentPerformanceAnalytics.Domain.Enums;
 using StudentPerformanceAnalytics.Domain.Interfaces;
-using Microsoft.Extensions.Configuration;
 using BCrypt.Net;
 
 namespace StudentPerformanceAnalytics.Application.Services;
