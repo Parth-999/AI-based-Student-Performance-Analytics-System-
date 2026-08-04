@@ -48,11 +48,19 @@ public class FlaskMlApiClient : IFlaskMlApiClient
 
         try
         {
+            Console.WriteLine("========== Payload ==========");
+            Console.WriteLine(JsonSerializer.Serialize(payload));
+            Console.WriteLine("=============================");
+
             var response = await _httpClient.PostAsJsonAsync("/api/v1/predict", payload);
 
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine("========== Flask Response ==========");
+                Console.WriteLine(json);
+                Console.WriteLine("====================================");
 
 
                 var result = JsonSerializer.Deserialize<FlaskPredictionResponse>(
