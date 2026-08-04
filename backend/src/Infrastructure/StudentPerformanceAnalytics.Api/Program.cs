@@ -71,6 +71,8 @@ builder.Services.AddScoped<IMarksService, MarksService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IPredictionService, PredictionService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Report Services
 builder.Services.AddScoped<IReportsService, ReportsService>();
