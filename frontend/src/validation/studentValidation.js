@@ -15,7 +15,7 @@ errors.rollNumber =
 
 if (!errors.rollNumber)
   errors.rollNumber =
-    validators.alphaNumeric(
+    validators.numeric(
       student.rollNumber,
       "Roll Number"
     );

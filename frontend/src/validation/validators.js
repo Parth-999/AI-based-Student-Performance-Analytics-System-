@@ -92,5 +92,14 @@ registrationId: (value) => {
       return `${fieldName} does not match.`;
 
     return "";
-  }
+  },
+
+  numeric: (value, fieldName = "Field") => {
+  const regex = /^[0-9]+$/;
+
+  if (!regex.test(value))
+    return `${fieldName} must contain only numbers.`;
+
+  return "";
+},
 };
